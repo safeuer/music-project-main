@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <link href="{% static 'reviewer/styles.css' %}" rel="stylesheet">
+    <title>BoomTree</title>
+  </head>
+  <body>
+    <div id="title-box"><strong>BoomTree</strong></div>
+    <div class="container">
+      <form class="info-form" action = "{% url 'reviewer:display' %}" method="GET">
+        <fieldset>
+          <legend>Retrieve Song Ratings by User</legend>
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </fieldset>
+      </form>
+        {% if ratings %}
+          <div class = "results-box">
+            <strong>Ratings</strong>
+            {% for rating in ratings %}
+                <ul style="list-style-type:none;">
+                    <li>{{ rating.song }} -> {{ rating.num_rate }}</li>
+                </ul>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <a href="{% url 'reviewer:index' %}"><button class="nav-button"><h3>Return to Home Page</h3></button></a>
+        <a href="{% url 'reviewer:signup' %}"><button class="nav-button"><h3>Register for BoomTree</h3></button></a>
+        <a href="{% url 'reviewer:tracklist' %}"><button class="nav-button"><h3>Get Tracklist for Albums</h3></button></a>
+    </div>
+  </body>
+</html>

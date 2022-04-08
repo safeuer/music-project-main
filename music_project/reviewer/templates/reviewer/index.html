@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        {% load static %}
+        <link href="{% static 'reviewer/styles.css' %}" rel="stylesheet">
+        <title>BoomTree</title>
+    </head>
+    <body>
+        <div id="title-box"><strong>BoomTree</strong></div>
+        <div id="button-box">
+            <a href="{% url 'reviewer:signup' %}"><button class="nav-button"><h3>Register for BoomTree</h3></button></a>
+            <a href="{% url 'reviewer:retrieve' %}"><button class="nav-button"><h3>Search Ratings by User</h3></button></a>
+            <a href="{% url 'reviewer:tracklist' %}"><button class="nav-button"><h3>Get Tracklist for Albums</h3></button></a>
+        </div>
+    </body>
+</html>
