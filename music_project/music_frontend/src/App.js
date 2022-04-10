@@ -2,12 +2,28 @@ import logo from './logo.svg';
 import './App.css';
 import axios from "axios";
 
+class Song extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      songTitle: "",
+      artist: ""
+    };
+  }
+
+  render() {
+    <div className = "{song.id}">
+      <button onClick = "this.displaysong">this.SongTitle</button>
+    </div>
+  }
+}
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       activeSong: {
-        title: "",
+        songTitle: "",
         artist: ""
       },
       songList: []
