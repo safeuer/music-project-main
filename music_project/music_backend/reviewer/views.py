@@ -3,8 +3,14 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from .forms import RegistrationForm, RetrievalForm, TracklistForm
 from .models import *
+from rest_framework import viewsets
+from .serializers import UserSerializer
 
+class UserView(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
 
+"""
 # Create your views here.
 def index(request):
     return render(request, 'reviewer/index.html')
@@ -43,4 +49,4 @@ def display_tracklist(request):
         song_list = album.song_set.all()
         songs.append(list(song_list))
     return render(request, 'reviewer/tracklist.html', {'form': form, 'songs': songs})
-
+"""
