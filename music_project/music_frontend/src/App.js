@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import axios from "axios";
+import React from 'react';
 
 class Song extends React.Component {
   constructor(props) {
@@ -12,9 +13,9 @@ class Song extends React.Component {
   }
 
   render() {
-    <div className = "{song.id}">
+    return (<div className = "{song.id}">
       <button onClick = "this.displaysong">this.SongTitle</button>
-    </div>
+    </div>)
   }
 }
 
