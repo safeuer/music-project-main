@@ -11,13 +11,15 @@ class User(models.Model):
 
     def __str__(self):
         return self.username
-
+    
+"""
 class Album(models.Model):
     album_name = models.CharField(max_length = 255)
     release_date = models.DateField(blank=True)
 
     def __str__(self):
         return self.album_name
+"""
 
 class Artist(models.Model):
     name = models.CharField(max_length = 255)
@@ -28,7 +30,7 @@ class Artist(models.Model):
 class Song(models.Model):
     title = models.CharField(max_length=255)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
-    album = models.ForeignKey(Album, on_delete=models.CASCADE, null=True)
+    # album = models.ForeignKey(Album, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.title + " - " + str(self.artist)
