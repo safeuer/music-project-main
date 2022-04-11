@@ -1,14 +1,26 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
-from .forms import RegistrationForm, RetrievalForm, TracklistForm
+# from .forms import RegistrationForm, RetrievalForm, TracklistForm
 from .models import *
 from rest_framework import viewsets
-from .serializers import UserSerializer
+from .serializers import *
 
 class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+class ArtistView(viewsets.ModelViewSet):
+    serializer_class = ArtistSerializer
+    queryset = Artist.objects.all()
+
+class SongView(viewsets.ModelViewSet):
+    serializer_class = SongSerializer
+    queryset = Song.objects.all()
+    
+class RatingView(viewsets.ModelViewSet):
+    serializer_class = RatingSerializer
+    queryset = Rating.objects.all()
 
 """
 # Create your views here.
