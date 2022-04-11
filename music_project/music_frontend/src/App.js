@@ -13,8 +13,8 @@ class Song extends React.Component {
   }
 
   render() {
-    return (<div className = "{song.id}">
-      <button onClick = "this.displaysong">this.SongTitle</button>
+    return (<div className="song-button">
+      <button onClick = "this.displaysong">{this.SongTitle} - {this.artist}</button>
     </div>)
   }
 }
@@ -59,14 +59,35 @@ class App extends React.Component {
       .catch(error => console.log(error))
   }
 
-  renderSongs = () => {
+  getArtistName = (artist_id) => {
+    axios
+    .get("http://localhost:8000/api/artists")
+    .then(response => response.data.filter(
+      artist => artist.id === artist_id 
+    ))
+    .then(artist => artist.name)
+    .catch(error => console.log(error))
+  }
+
+  renderSongList = () => {
     songList = this.state.songList;
     return songList.map(song => (
       <li key={song.id}
       className="song-in-list">
-        <Song songTitle={song.title} artist={} />
+        <Song songTitle={song.title} artist={this.getArtistName(song.artist)} songID={song.id} />
       </li>
     ))
+  }
+
+  render() {
+    return (
+      <div className="main">
+        BoomTree
+        <ul className="song-list">
+          {this.renderSongList()}
+        </ul>
+      </div>
+    )
   }
   
 }
