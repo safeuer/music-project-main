@@ -5,10 +5,12 @@ from django.urls import reverse
 from .models import *
 from rest_framework import viewsets
 from .serializers import *
+from rest_framework.authentication import TokenAuthentication
 
 class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    authentication_classes = (TokenAuthentication, )
 
 class ArtistView(viewsets.ModelViewSet):
     serializer_class = ArtistSerializer
