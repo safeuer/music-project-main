@@ -20,16 +20,16 @@ class Album(models.Model):
     def __str__(self):
         return self.album_name
 """
-
+"""
 class Artist(models.Model):
     name = models.CharField(max_length = 255)
 
     def __str__(self):
         return self.name
-
+"""
 class Song(models.Model):
     title = models.CharField(max_length=255)
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    artist = models.CharField(max_length=255) # alter to make case insensitive?
     # album = models.ForeignKey(Album, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
