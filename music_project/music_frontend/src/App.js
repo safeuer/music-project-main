@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import axios from "axios";
 import React from 'react';
+import ActiveDisplay from './components/ActiveDisplay';
 
 class Song extends React.Component {
   constructor(props) {
@@ -25,9 +26,12 @@ class App extends React.Component {
     this.state = {
       activeSong: {
         songTitle: "",
-        artist: ""
+        artist: "",
+        userRated: false,
+        avgRating: 0
       },
-      songList: []
+      songList: [],
+      displayActiveSong: false
     };
   }
 
@@ -59,18 +63,8 @@ class App extends React.Component {
       .catch(error => console.log(error))
   }
 
-  /*  getArtistName = (artist_id) => {
-    axios
-    .get("http://localhost:8000/api/artists")
-    .then(response => response.data.filter(
-      artist => artist.id === artist_id 
-    ))
-    .then(artists => {
-      console.log(artists);
-      return artists[0].name;
-    })
-    .catch(error => console.log(error))
-  } */
+  renderActiveSong = (song) => {
+  }
 
   renderSongList = () => {
     var songList = this.state.songList;
@@ -82,6 +76,17 @@ class App extends React.Component {
     ))
   }
 
+  renderActiveSong = () => {
+    var activeSong = this.state.activeSong;
+    if (this.state.displayActiveSong) {
+      return(
+      <div className = "active-song">
+        <ActiveDisplay activeSongTitle={activeSong.songTitle} activeArtist = {activeSong.artist} />
+      </div>
+      )
+    }
+  }
+
   render() {
     return (
       <div className="main">
@@ -89,6 +94,7 @@ class App extends React.Component {
         <ul className="song-list">
           {this.renderSongList()}
         </ul>
+        {this.renderActiveSong()}
       </div>
     )
   }
