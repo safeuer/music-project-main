@@ -100,6 +100,11 @@ class App extends React.Component {
       .catch(error => console.log(error))
   }
 
+  onFormChange = (event) => {
+    let {name, value} = event.target;
+    const activeSong = { ...this.state.activeSong, [name]: value};
+    this.setState({activeSong: activeSong});
+  }
 
   displaySongPlate = () => {
     return(
@@ -111,6 +116,12 @@ class App extends React.Component {
             Avg. Rating - {this.state.activeSong.avgRating}
               <div className = "songButtons">
                 <button onClick={() => this.deleteRating()}>Delete Rating</button>
+                <form onSubmit={this.onFormSubmit}>
+                  <input name="songTitle" value={this.state.activeSong.songTitle} onChange={this.onFormChange}></input>
+                  <input name="artist" value={this.state.activeSong.artist} onChange={this.onFormChange}></input>
+                  <input name="rating"></input>
+                  <button type="submit">Save</button>
+                </form>
               </div>
           </div>
       </div>
