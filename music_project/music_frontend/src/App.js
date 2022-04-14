@@ -26,11 +26,13 @@ class App extends React.Component {
       activeSong: {
         songTitle: "",
         artist: "",
+        songID: 0,
         userRated: false,
         avgRating: 0
       },
       songList: [],
-      displayActiveSong: false
+      displayActiveSong: false,
+      username: "Amelia-Earhart"
     };
   }
 
@@ -54,7 +56,7 @@ class App extends React.Component {
       ))
       .then(ratings => ratings.map(rating => rating.num_rate))
       .then(ratingNums => (ratingNums.reduce((a, b) => a+b, 0))/ratingNums.length)
-      .then(avRating => this.setState( {activeSong: {songTitle: songTitle, artist: songArtist, userRated: true, avgRating: avRating}
+      .then(avRating => this.setState( {activeSong: {songTitle: songTitle, artist: songArtist, songID: songID, userRated: true, avgRating: avRating}
       }))
       .then(x => this.setState( {displayActiveSong: true }))
     }
@@ -70,6 +72,22 @@ class App extends React.Component {
       .delete("http://localhost:8000/api/ratings/{rating.id}")
       .then(response => this.refreshSongs) // make one that refreshes the rating instead? of the open song?
       .catch(error => console.log(error))
+  }
+
+  deleteRating = () => {
+    const song = this.state.activeSong.songID;
+    const user = this.state.username;
+    axios
+      .get("http://localhost:8000/api/ratings")
+      .then(response => response.data.filter(
+        rating => (rating.song === song) && (rating.user === user)
+      ))
+      .then(ratings => ratings[0])
+      .then(rating => {
+        axios 
+          .delete(`http://localhost:8000/api/ratings/${rating.id}`)
+          .then(x => this.displaySongPlate())
+      })
   }
 
   getSongTitle = (song_id) => {
@@ -92,7 +110,7 @@ class App extends React.Component {
             Song's Artist - {this.state.activeSong.artist} <br></br>
             Avg. Rating - {this.state.activeSong.avgRating}
               <div className = "songButtons">
-                <button onClick={() => alert('Test Delete')}>Delete Rating</button>
+                <button onClick={() => this.deleteRating()}>Delete Rating</button>
               </div>
           </div>
       </div>
@@ -114,7 +132,7 @@ class App extends React.Component {
     const hasActiveSong = this.state.displayActiveSong;
     return (
       <div className="main">
-        BoomTree
+        BoomTree - signed in as {this.state.username}
         <ul className="song-list">
           {this.renderSongList()}
         </ul>
