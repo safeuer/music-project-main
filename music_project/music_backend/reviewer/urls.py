@@ -14,7 +14,8 @@ app_name = 'reviewer'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
-    path('api/', include(router.urls)),
+    path('api/', include('djoser.urls')),
+    path('api/', include('djoser.urls.authtoken')),
     path('auth/', obtain_auth_token),
     path('login/', views.login),
 ]
