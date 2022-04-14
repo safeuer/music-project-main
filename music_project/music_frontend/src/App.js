@@ -47,7 +47,7 @@ class App extends React.Component {
       .catch(error => console.log(error))
   }
 
-
+// this doesn't set state until you click it twice for some reason
   renderSong = (songID, songTitle, songArtist) => {
     axios 
       .get("http://localhost:8000/api/ratings")
@@ -58,7 +58,7 @@ class App extends React.Component {
       .then(ratingNums => (ratingNums.reduce((a, b) => a+b, 0))/ratingNums.length)
       .then(avRating => this.setState( {activeSong: {songTitle: songTitle, artist: songArtist, songID: songID, userRated: true, avgRating: avRating}
       }))
-      .then(x => this.setState( {displayActiveSong: true }))
+      .then(x => this.setState( {displayActiveSong: true }));
     }
 
   createSongDiv = (title, artist, songID) => {
@@ -105,11 +105,11 @@ class App extends React.Component {
     const activeSong = { ...this.state.activeSong, [name]: value};
     this.setState({activeSong: activeSong});
   }
-// does not work. needs help.
+
   onFormSubmit = (event) => {
     const activeSong = this.state.activeSong;
     axios
-      .put(`http://localhost:8000/api/songs/${activeSong.songID}`, {title: activeSong.songTitle, artist: activeSong.artist})
+      .put(`http://localhost:8000/api/songs/${activeSong.songID}/`, {title: activeSong.songTitle, artist: activeSong.artist})
       .then(res => this.setState({displayActiveSong: false}))
       .then(() => this.refreshSongs())
   }
@@ -127,8 +127,8 @@ class App extends React.Component {
                 <form onSubmit={this.onFormSubmit}>
                   <input name="songTitle" value={this.state.activeSong.songTitle} onChange={this.onFormChange}></input>
                   <input name="artist" value={this.state.activeSong.artist} onChange={this.onFormChange}></input>
-                  <button type="submit">Save</button>
                 </form>
+                <button onClick={() => this.onFormSubmit()}>Save</button>
               </div>
           </div>
       </div>
