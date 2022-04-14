@@ -28,6 +28,7 @@ class Artist(models.Model):
         return self.name
 """
 class Song(models.Model):
+    #id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255)
     artist = models.CharField(max_length=255) # alter to make case insensitive?
     # album = models.ForeignKey(Album, on_delete=models.CASCADE, null=True)
