@@ -59,16 +59,6 @@ class App extends React.Component {
       .then(x => this.setState( {displayActiveSong: true }))
     }
 
-
-  //   var activeSong = this.state.activeSong;
-  //   if (this.state.displayActiveSong) {
-  //     return(
-  //     <div className = "active-song">
-  //       <ActiveDisplay activeSongTitle={activeSong.songTitle} activeArtist = {activeSong.artist} />
-  //     </div>
-  //     )
-  //   }
-
   createSongDiv = (title, artist, songID) => {
     return (<div className="song-button">
       <button onClick={() => this.renderSong(songID, title, artist)}>{title} - {artist}</button>
