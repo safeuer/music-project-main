@@ -26,11 +26,13 @@ class App extends React.Component {
       activeSong: {
         songTitle: "",
         artist: "",
+        songID: 0,
         userRated: false,
         avgRating: 0
       },
       songList: [],
-      displayActiveSong: false
+      displayActiveSong: false,
+      username: "Amelia-Earhart"
     };
   }
 
@@ -54,7 +56,7 @@ class App extends React.Component {
       ))
       .then(ratings => ratings.map(rating => rating.num_rate))
       .then(ratingNums => (ratingNums.reduce((a, b) => a+b, 0))/ratingNums.length)
-      .then(avRating => this.setState( {activeSong: {songTitle: songTitle, artist: songArtist, userRated: true, avgRating: avRating}
+      .then(avRating => this.setState( {activeSong: {songTitle: songTitle, artist: songArtist, songID: songID, userRated: true, avgRating: avRating}
       }))
       .then(x => this.setState( {displayActiveSong: true }))
     }
@@ -65,12 +67,23 @@ class App extends React.Component {
     </div>)
   }
 
-  handleDelete = (rating) => {
-    axios 
-      .delete("http://localhost:8000/api/ratings/{rating.id}")
-      .then(response => this.refreshSongs) // make one that refreshes the rating instead? of the open song?
-      .catch(error => console.log(error))
-  }
+  // deleteRating = (songID, username) => {
+  //   console.log(songID);
+  //   console.log(username);
+  //   axios 
+  //     .get("http://localhost:8000/api/ratings/")
+  //     .then(response => response.data.filter(
+  //       rating => (rating.song === songID) && (rating.user === username)
+  //     ))
+  //     .then(rating => console.log(rating))
+  //     .then(rating => {
+  //       const ratingID = rating['id'];
+  //       axios
+  //         .delete(`http://localhost:8000/api/ratings/${ratingID}`)
+  //         .then(response => this.refreshSongs());
+  //     })
+  //     .catch(error => console.log(error));
+  // }
 
   getSongTitle = (song_id) => {
     axios
@@ -103,6 +116,7 @@ class App extends React.Component {
         {hasActiveSong ? (<div className="activeSongDiv">
           Song is {this.state.activeSong.songTitle} by {this.state.activeSong.artist} with an average rating of {this.state.activeSong.avgRating}
         </div>) : null}
+        {/* <button onClick={() => this.deleteRating(this.state.activeSong.songID, this.state.username)}>Delete Active Rating</button> */}
       </div>
     )
   }
