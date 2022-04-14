@@ -90,6 +90,14 @@ class App extends React.Component {
       })
   }
 
+  deleteSong = () => {
+    const songID = this.state.activeSong.songID;
+    axios 
+      .delete(`http://localhost:8000/api/songs/${songID}`)
+      .then(res => this.setState({displayActiveSong: false}))
+      .then(() => this.refreshSongs())  
+    }
+
   getSongTitle = (song_id) => {
     axios
       .get("http://localhost:8000/api/songs")
@@ -124,6 +132,7 @@ class App extends React.Component {
             Avg. Rating - {this.state.activeSong.avgRating}
               <div className = "songButtons">
                 <button onClick={() => this.deleteRating()}>Delete Rating</button>
+                <button onClick={() => this.deleteSong()}>Delete Song</button>
                 <form onSubmit={this.onFormSubmit}>
                   <input name="songTitle" value={this.state.activeSong.songTitle} onChange={this.onFormChange}></input>
                   <input name="artist" value={this.state.activeSong.artist} onChange={this.onFormChange}></input>
