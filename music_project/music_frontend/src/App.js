@@ -105,6 +105,14 @@ class App extends React.Component {
     const activeSong = { ...this.state.activeSong, [name]: value};
     this.setState({activeSong: activeSong});
   }
+// does not work. needs help.
+  onFormSubmit = (event) => {
+    const activeSong = this.state.activeSong;
+    axios
+      .put(`http://localhost:8000/api/songs/${activeSong.songID}`, {title: activeSong.songTitle, artist: activeSong.artist})
+      .then(res => this.setState({displayActiveSong: false}))
+      .then(() => this.refreshSongs())
+  }
 
   displaySongPlate = () => {
     return(
@@ -119,7 +127,6 @@ class App extends React.Component {
                 <form onSubmit={this.onFormSubmit}>
                   <input name="songTitle" value={this.state.activeSong.songTitle} onChange={this.onFormChange}></input>
                   <input name="artist" value={this.state.activeSong.artist} onChange={this.onFormChange}></input>
-                  <input name="rating"></input>
                   <button type="submit">Save</button>
                 </form>
               </div>
