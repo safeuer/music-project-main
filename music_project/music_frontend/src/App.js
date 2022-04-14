@@ -2,7 +2,6 @@ import logo from './logo.svg';
 import './App.css';
 import axios from "axios";
 import React from 'react';
-import ActiveDisplay from './components/ActiveDisplay';
 
 // class Song extends React.Component {
 //   constructor(props) {
@@ -47,20 +46,32 @@ class App extends React.Component {
   }
 
 
-  renderSong = (songID) => {
-    var activeSong = this.state.activeSong;
-    if (this.state.displayActiveSong) {
-      return(
-      <div className = "active-song">
-        <ActiveDisplay activeSongTitle={activeSong.songTitle} activeArtist = {activeSong.artist} />
-      </div>
-      )
+  renderSong = (songID, songTitle, songArtist) => {
+    axios 
+      .get("http://localhost:8000/api/ratings")
+      .then(response => response.data.filter(
+        rating => rating.song === songID 
+      ))
+      .then(ratings => ratings.map(rating => rating.num_rate))
+      .then(ratingNums => (ratingNums.reduce((a, b) => a+b, 0))/ratingNums.length)
+      .then(avRating => this.setState( {activeSong: {songTitle: songTitle, artist: songArtist, userRated: true, avgRating: avRating}
+      }))
+      .then(x => this.setState( {displayActiveSong: true }))
     }
-  }
+
+
+  //   var activeSong = this.state.activeSong;
+  //   if (this.state.displayActiveSong) {
+  //     return(
+  //     <div className = "active-song">
+  //       <ActiveDisplay activeSongTitle={activeSong.songTitle} activeArtist = {activeSong.artist} />
+  //     </div>
+  //     )
+  //   }
 
   createSongDiv = (title, artist, songID) => {
     return (<div className="song-button">
-      <button onClick={this.renderSong(songID)}>{title} - {artist}</button>
+      <button onClick={() => this.renderSong(songID, title, artist)}>{title} - {artist}</button>
     </div>)
   }
 
@@ -92,17 +103,19 @@ class App extends React.Component {
   }
 
   render() {
+    const hasActiveSong = this.state.displayActiveSong;
     return (
       <div className="main">
         BoomTree
         <ul className="song-list">
           {this.renderSongList()}
         </ul>
-        {this.renderActiveSong()}
+        {hasActiveSong ? (<div className="activeSongDiv">
+          Song is {this.state.activeSong.songTitle} by {this.state.activeSong.artist} with an average rating of {this.state.activeSong.avgRating}
+        </div>) : null}
       </div>
     )
   }
-  
 }
 
 export default App;
