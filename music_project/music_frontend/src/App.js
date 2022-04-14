@@ -4,21 +4,21 @@ import axios from "axios";
 import React from 'react';
 import ActiveDisplay from './components/ActiveDisplay';
 
-class Song extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      songTitle: this.props.songTitle,
-      artist: this.props.artist
-    };
-  }
+// class Song extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       songTitle: this.props.songTitle,
+//       artist: this.props.artist
+//     };
+//   }
 
-  render() {
-    return (<div className="song-button">
-      <button>{this.state.songTitle} - {this.state.artist}</button>
-    </div>)
-  }
-}
+//   render() {
+//     return (<div className="song-button">
+//     <button>{this.state.songTitle} - {this.state.artist}</button>
+//   </div>)
+//   }
+// }
 
 class App extends React.Component {
   constructor(props) {
@@ -46,6 +46,24 @@ class App extends React.Component {
       .catch(error => console.log(error))
   }
 
+
+  renderSong = (songID) => {
+    var activeSong = this.state.activeSong;
+    if (this.state.displayActiveSong) {
+      return(
+      <div className = "active-song">
+        <ActiveDisplay activeSongTitle={activeSong.songTitle} activeArtist = {activeSong.artist} />
+      </div>
+      )
+    }
+  }
+
+  createSongDiv = (title, artist, songID) => {
+    return (<div className="song-button">
+      <button onClick={this.renderSong(songID)}>{title} - {artist}</button>
+    </div>)
+  }
+
   handleDelete = (rating) => {
     axios 
       .delete("http://localhost:8000/api/ratings/{rating.id}")
@@ -63,28 +81,14 @@ class App extends React.Component {
       .catch(error => console.log(error))
   }
 
-  renderActiveSong = (song) => {
-  }
-
   renderSongList = () => {
     var songList = this.state.songList;
     return songList.map(song => (
       <li key={song.id}
       className="song-in-list">
-        <Song songTitle={song.title} artist={song.artist} />
+        {this.createSongDiv(song.title, song.artist, song.id)}
       </li>
     ))
-  }
-
-  renderActiveSong = () => {
-    var activeSong = this.state.activeSong;
-    if (this.state.displayActiveSong) {
-      return(
-      <div className = "active-song">
-        <ActiveDisplay activeSongTitle={activeSong.songTitle} activeArtist = {activeSong.artist} />
-      </div>
-      )
-    }
   }
 
   render() {
