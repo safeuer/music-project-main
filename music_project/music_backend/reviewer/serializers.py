@@ -4,8 +4,8 @@ from .models import *
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'password',)
-
+        fields = '__all__'
+        
 class ArtistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artist

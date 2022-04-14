@@ -16,6 +16,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('api/', include(router.urls)),
     path('auth/', obtain_auth_token),
+    path('login/', views.login),
 ]
 
 """
