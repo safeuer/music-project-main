@@ -30,6 +30,11 @@ class App extends React.Component {
         userRated: false,
         avgRating: 0
       },
+      newSong: {
+        songTitle: "",
+        artist: "",
+        rating: 0
+      },
       songList: [],
       displayActiveSong: false,
       username: "Amelia-Earhart"
@@ -114,6 +119,35 @@ class App extends React.Component {
     this.setState({activeSong: activeSong});
   }
 
+  onCreateFormChange = (event) => {
+    let {name, value} = event.target;
+    if (value === "1" || value === "2" || value === "3" || value === "4" || value === "5") {
+      value = parseInt(value);
+    };
+    const newSong = { ...this.state.newSong, [name]: value};
+    this.setState({newSong: newSong});
+  }
+
+  onCreateFormSubmit = (event) => {
+    const newSong = this.state.newSong;
+    console.log("hey");
+    console.log(newSong.rating);
+    console.log(newSong.songTitle);
+    console.log(newSong.artist);
+    if (newSong.rating != 0 && newSong.rating != "none" && newSong.songTitle != "" && newSong.artist != "") {
+      axios 
+        .post(`http://localhost:8000/api/songs/`, {title: newSong.songTitle, artist: newSong.artist})
+        .then(res => this.refreshSongs())
+        .then(() => this.setState({newSong: {songTitle: "", artist: "", rating: 0}})
+        )
+    } else {
+      this.refreshSongs();
+      this.setState({newSong: {songTitle: "", artist: "", rating: 0}});
+      alert("Invalid Song!");
+    }
+      
+  }
+
   onFormSubmit = (event) => {
     const activeSong = this.state.activeSong;
     axios
@@ -133,7 +167,7 @@ class App extends React.Component {
               <div className = "songButtons">
                 <button onClick={() => this.deleteRating()}>Delete Rating</button>
                 <button onClick={() => this.deleteSong()}>Delete Song</button>
-                <form onSubmit={this.onFormSubmit}>
+                <form>
                   <input name="songTitle" value={this.state.activeSong.songTitle} onChange={this.onFormChange}></input>
                   <input name="artist" value={this.state.activeSong.artist} onChange={this.onFormChange}></input>
                 </form>
@@ -167,6 +201,20 @@ class App extends React.Component {
         {/* {hasActiveSong ? (<div className="activeSongDiv">
           Song is {this.state.activeSong.songTitle} by {this.state.activeSong.artist} with an average rating of {this.state.activeSong.avgRating}
         </div>) : null} */}
+        <h3>Add Song</h3>
+        <form>
+          <input name="songTitle" placeholder="Song Title" onChange={this.onCreateFormChange}></input>
+          <input name="artist" placeholder="Artist" onChange={this.onCreateFormChange}></input>
+          <select name="rating" onChange={this.onCreateFormChange}>
+            <option value="none">-rating-</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </form>
+        <button onClick={() => this.onCreateFormSubmit()}>Create Song</button>
       </div>
     )
   }
