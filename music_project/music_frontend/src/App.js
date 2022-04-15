@@ -103,16 +103,6 @@ class App extends React.Component {
       .then(() => this.refreshSongs())  
     }
 
-  getSongTitle = (song_id) => {
-    axios
-      .get("http://localhost:8000/api/songs")
-      .then(response => response.data.filter(
-        song => song.id === song_id 
-      ))
-      .then(song => song.title)
-      .catch(error => console.log(error))
-  }
-
   onFormChange = (event) => {
     let {name, value} = event.target;
     const activeSong = { ...this.state.activeSong, [name]: value};
@@ -130,16 +120,19 @@ class App extends React.Component {
 
   onCreateFormSubmit = (event) => {
     const newSong = this.state.newSong;
-    console.log("hey");
-    console.log(newSong.rating);
-    console.log(newSong.songTitle);
-    console.log(newSong.artist);
     if (newSong.rating != 0 && newSong.rating != "none" && newSong.songTitle != "" && newSong.artist != "") {
       axios 
         .post(`http://localhost:8000/api/songs/`, {title: newSong.songTitle, artist: newSong.artist})
-        .then(res => this.refreshSongs())
-        .then(() => this.setState({newSong: {songTitle: "", artist: "", rating: 0}})
-        )
+        .then(res => axios 
+          .get("http://localhost:8000/api/songs")
+          .then(response => response.data.filter(
+            song => song.title === newSong.songTitle
+          ))
+        .then(song => song[0].id)
+        .then(songID => axios 
+                        .post(`http://localhost:8000/api/ratings/`, {num_rate: newSong.rating, user: this.state.username, song: songID})
+                        .then(res => this.refreshSongs())
+                        .then(() => this.setState({newSong: {songTitle: "", artist: "", rating: 0}}))))
     } else {
       this.refreshSongs();
       this.setState({newSong: {songTitle: "", artist: "", rating: 0}});
