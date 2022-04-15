@@ -8,28 +8,28 @@ How to run App:
 0. Install React according to tutorial install instructions. 
 You may also need to install axios with
 ```shell
-npm add axios
+>>> npm add axios
 ```
 This is a problem we've occasionally encountered across different operating systems.
 
 1. Run the Django backend 
     cd into music_project directory and run
     ```shell
-    source venv/bin/activate # activate virtual environment
-    cd music_backend
-    python3 manage.py runserver # run Django server
+    >>> source venv/bin/activate # activate virtual environment
+    >>> cd music_backend
+    >>> python3 manage.py runserver # run Django server
     ```
 
 2. Run the React frontend 
     open a new terminal window and cd into music_project/music_frontend directory and run
     ```shell
-    npm start
+    >>> npm start
     ```
 
     in the event of compilation error, run 
     ```shell
-    npm install
-    npm start
+    >>> npm install
+    >>> npm start
     ```
     Your browser should automatically open the app. If not, check <http://localhost:3000/>.
 
