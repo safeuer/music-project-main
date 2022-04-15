@@ -39,7 +39,7 @@ Once the app is running, sign up with a username and password and enter the site
 
 Large additional implemented feature: user registration and authentication. A user must register with a username and password before having access to the site. If a user tries to register with a username that is already taken, they will be notified and told to choose a different username. If a user enters incorrect login info, they will receive an error message and be prompted to try again. Akaash tried *very* hard to get Token Authentication working through the Rest API, but this is the best we could do. 
 
-Work Distribution:
+Work Distribution(even distribution):
 Sam Feuer: most of CRUD functionality for ratings
 Nigel Hayes: rest of CRUD functionality for ratings, login/signup and user authentication
 Akaash Kapoor: backend with REST API, login/signup and user authentication
