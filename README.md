@@ -25,7 +25,7 @@ This is a problem we've occasionally encountered across different operating syst
     ```shell
     >>> source venv/bin/activate # activate virtual environment
     >>> cd music_frontend
-    >>> npm start
+    >>> npm start # run React app
     ```
 
     in the event of compilation error, run 
