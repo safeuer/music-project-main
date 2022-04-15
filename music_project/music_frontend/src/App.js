@@ -19,6 +19,13 @@ class App extends React.Component {
         artist: "",
         rating: 0
       },
+      isLoggedIn: false,
+      isMakingAcc: false,
+      songList: [],
+      displayActiveSong: false,
+      username: "",
+      logInProps: {userInput: "",
+              passwordInput: ""},
       songList: [],
       displayActiveSong: false,
       username: "Amelia-Earhart"
@@ -47,20 +54,6 @@ class App extends React.Component {
       .then(ratingNums => (ratingNums.reduce((a, b) => a+b, 0))/ratingNums.length)
       .then(avRating => this.setState( {activeSong: {songTitle: songTitle, artist: songArtist, songID: songID, avgRating: avRating}
       }))
-      .then(() => {
-        // axios
-        //   .get("http://localhost:8000/api/ratings")
-        //   .then(response => response.data.filter(
-        //     rating => (rating.user === this.state.username) && (rating.song === songID)
-        //   ))
-        //   .then(rating => {
-        //     if (rating.length > 0) {
-        //       this.setState( {activeSong: {userRating: rating.num_rate}} )
-        //     } else {
-        //       this.setState( {activeSong: {userRating: "none"}})
-        //     }
-        //   })
-      })
       .then(() => this.setState( {displayActiveSong: true }));
     }
 
@@ -210,6 +203,121 @@ class App extends React.Component {
     )
   }
 
+  onLoginClick = (ourUser, ourPassword) =>
+  {
+    // console.log(ourUser);
+    // console.log(ourPassword);
+    axios
+      .get("http://localhost:8000/api/users")
+      .then(response => response.data.filter(userInfo => (userInfo.username === ourUser) && (userInfo.password === ourPassword)))
+      .then(userInfo =>
+      {
+        // console.log(userInfo);
+        if (userInfo.length > 0)
+          {
+            // console.log('The username is about to be updated. It is: ' + userInfo[0].username)
+            this.setState({username: userInfo[0].username})
+            this.setState({isLoggedIn: true})
+            // console.log('The current username is ' + this.state.username)
+          }
+        else
+        {
+          alert('The information you entered within the login field is NOT COREECT!')
+        }
+      })
+  }
+
+  onSignupClick = (ourUser, ourPassword) =>
+  {
+    // console.log(ourUser);
+    // console.log(ourPassword);
+    axios
+      .get("http://localhost:8000/api/users")
+      .then(response => response.data.filter(userInfo => (userInfo.username === ourUser)))
+      .then(userInfo =>
+      {
+        // console.log(userInfo);
+        if (userInfo.length > 0)
+          {
+            alert('The username: ' + userInfo[0].username + ' has already been taken. Please select a new username and try again.')
+          }
+        else
+        {
+          let payload = { username: ourUser, password: ourPassword}
+          axios
+            .post("http://localhost:8000/api/users/", payload)
+            .then(x => this.setState({username: ourUser}))
+            .then(x => this.setState({isLoggedIn: true}))
+            .catch(error => console.log(error))
+        }
+      })
+  }
+
+  updateGateField= (event) => {
+    const {name, value} = event.target;
+    const newlogIn = { ...this.state.logInProps, [name]: value};
+    this.setState({logInProps: newlogIn});
+  }
+
+  // openSignUp = () => {
+  //   alert('Opening the Sign Up Area!')
+  // }
+
+
+  displayGate = (choice) => {
+    if (choice)
+    {
+      return(
+        <div className='formWrapper'>
+          <div className = 'signupForm'>
+            <h1>SIGN UP FOR BOOMTREE</h1>
+            <div className='userField'>
+              <label>
+                Username: 
+                <input type="text" name="userInput" onChange={this.updateGateField} id='usernameArea'/>
+              </label>
+            </div>
+            <div className='passField'>
+              <label>
+                Password: 
+                <input type="text" name="passwordInput" onChange={this.updateGateField} id='passwordArea'/>
+              </label>
+            </div>
+            <button onClick={() => this.onSignupClick(this.state.logInProps.userInput, this.state.logInProps.passwordInput)}>Create Account</button>
+            <div className='changeFormDiv'>
+                  Oh...you WANTED to log in? Well, click <a onClick={() => this.setState({isMakingAcc: false})}>HERE</a>!
+            </div>
+
+          </div>
+        </div>
+      )
+    }
+    else
+    {
+      return(
+        <div className = 'formWrapper'>
+              <div className = 'loginForm'>
+                  <h1>LOGIN</h1>
+                  <div className='userField'>
+                    <label>
+                      Username: 
+                      <input type="text" name="userInput" onChange={this.updateGateField} id='usernameArea'/>
+                    </label>
+                  </div>
+                  <div className='passField'>
+                    <label>
+                      Password: 
+                      <input type="text" name="passwordInput" onChange={this.updateGateField} id='passwordArea'/>
+                    </label>
+                  </div>
+                <button onClick={() => this.onLoginClick(this.state.logInProps.userInput, this.state.logInProps.passwordInput)}>Login</button>
+                <div className='changeFormDiv'>
+                  Don't have an account? Sign up by clicking <a onClick={() => this.setState({isMakingAcc: true})}>HERE</a>!
+                </div>
+              </div>
+        </div>)
+    }
+  }
 
   renderSongList = () => {
     var songList = this.state.songList;
@@ -221,11 +329,12 @@ class App extends React.Component {
     ))
   }
 
-  render() {
+  showSongList = () =>
+  {
     const hasActiveSong = this.state.displayActiveSong;
-    return (
-      <div className="main">
-        BoomTree - signed in as {this.state.username}
+    return(
+    <div>
+      BoomTree - Signed in as {this.state.username}
         <ul className="song-list">
           {this.renderSongList()}
         </ul>
@@ -244,6 +353,16 @@ class App extends React.Component {
           </select>
         </form>
         <button onClick={() => this.onCreateFormSubmit()}>Create Song</button>
+    </div>)
+  }
+
+  render() {
+    const hasActiveSong = this.state.displayActiveSong;
+    const hasLoggedIn = this.state.isLoggedIn;
+    const attemptSignup = this.state.isMakingAcc;
+    return (
+      <div className="main">
+        {!hasLoggedIn ? this.displayGate(this.state.isMakingAcc) : this.showSongList()}
       </div>
     )
   }
