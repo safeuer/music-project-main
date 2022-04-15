@@ -3,22 +3,6 @@ import './App.css';
 import axios from "axios";
 import React from 'react';
 
-// class Song extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       songTitle: this.props.songTitle,
-//       artist: this.props.artist
-//     };
-//   }
-
-//   render() {
-//     return (<div className="song-button">
-//     <button>{this.state.songTitle} - {this.state.artist}</button>
-//   </div>)
-//   }
-// }
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -246,9 +230,6 @@ class App extends React.Component {
           {this.renderSongList()}
         </ul>
         {hasActiveSong ? this.displaySongPlate() : null}
-        {/* {hasActiveSong ? (<div className="activeSongDiv">
-          Song is {this.state.activeSong.songTitle} by {this.state.activeSong.artist} with an average rating of {this.state.activeSong.avgRating}
-        </div>) : null} */}
         <h3>Add Song</h3>
         <form>
           <input name="songTitle" placeholder="Song Title" onChange={this.onCreateFormChange}></input>

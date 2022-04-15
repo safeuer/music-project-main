@@ -10,11 +10,6 @@ class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
-"""
-class ArtistView(viewsets.ModelViewSet):
-    serializer_class = ArtistSerializer
-    queryset = Artist.objects.all()
-"""
 class SongView(viewsets.ModelViewSet):
     serializer_class = SongSerializer
     queryset = Song.objects.all()
