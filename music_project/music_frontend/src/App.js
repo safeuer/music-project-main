@@ -1,7 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
 import axios from "axios";
-import React from 'react';
+import React, { Component } from 'react';
+import Root from './Root'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Container } from "react-bootstrap";
+import Signup from "./components/signup/Signup";
+import Login from "./components/login/Login";
+
 
 // class Song extends React.Component {
 //   constructor(props) {
@@ -19,7 +25,7 @@ import React from 'react';
 //   }
 // }
 
-class App extends React.Component {
+class MainPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,10 +53,10 @@ class App extends React.Component {
 
 
   renderSong = (songID, songTitle, songArtist) => {
-    axios 
+    axios
       .get("http://localhost:8000/api/ratings")
       .then(response => response.data.filter(
-        rating => rating.song === songID 
+        rating => rating.song === songID
       ))
       .then(ratings => ratings.map(rating => rating.num_rate))
       .then(ratingNums => (ratingNums.reduce((a, b) => a+b, 0))/ratingNums.length)
@@ -66,7 +72,7 @@ class App extends React.Component {
   }
 
   handleDelete = (rating) => {
-    axios 
+    axios
       .delete("http://localhost:8000/api/ratings/{rating.id}")
       .then(response => this.refreshSongs) // make one that refreshes the rating instead? of the open song?
       .catch(error => console.log(error))
@@ -76,7 +82,7 @@ class App extends React.Component {
     axios
       .get("http://localhost:8000/api/songs")
       .then(response => response.data.filter(
-        song => song.id === song_id 
+        song => song.id === song_id
       ))
       .then(song => song.title)
       .catch(error => console.log(error))
@@ -105,6 +111,22 @@ class App extends React.Component {
         </div>) : null}
       </div>
     )
+  }
+}
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <BrowserRouter>
+          <Routes>
+            <Route path = '/' element = {<Signup />}></Route>
+            <Route path="/login" element={<Login />}></Route>
+            <Route path="/mainpage" element={<MainPage />}></Route>
+          </Routes>
+        </BrowserRouter>
+      </div>
+    ) ;
   }
 }
 
