@@ -30,7 +30,8 @@ This is a problem we've occasionally encountered across different operating syst
 
     in the event of compilation error, run 
     ```shell
-    >>> npm install # install necessary dependencies. these should already be in the venv, but if not npm install should take care of it
+    # install necessary dependencies. these should already be in the venv, but if not npm install should take care of it
+    >>> npm install 
     >>> npm start
     ```
     Your browser should automatically open the app. If not, check <http://localhost:3000/>.
