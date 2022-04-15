@@ -1,7 +1,6 @@
 # Sam Feuer, Nigel Hayes, Akaash Kapoor
 # COMP333 Section 2
-
-Homework 3: BoomTree Song Rating App with Django backend and React frontend
+# Homework 3: BoomTree Song Rating App with Django backend and React frontend
 
 How to run App:
 
