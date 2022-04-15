@@ -27,8 +27,8 @@ class App extends React.Component {
         songTitle: "",
         artist: "",
         songID: 0,
-        userRated: false,
-        avgRating: 0
+        avgRating: 0,
+        userRating: 0
       },
       newSong: {
         songTitle: "",
@@ -61,9 +61,23 @@ class App extends React.Component {
       ))
       .then(ratings => ratings.map(rating => rating.num_rate))
       .then(ratingNums => (ratingNums.reduce((a, b) => a+b, 0))/ratingNums.length)
-      .then(avRating => this.setState( {activeSong: {songTitle: songTitle, artist: songArtist, songID: songID, userRated: true, avgRating: avRating}
+      .then(avRating => this.setState( {activeSong: {songTitle: songTitle, artist: songArtist, songID: songID, avgRating: avRating}
       }))
-      .then(x => this.setState( {displayActiveSong: true }));
+      .then(() => {
+        // axios
+        //   .get("http://localhost:8000/api/ratings")
+        //   .then(response => response.data.filter(
+        //     rating => (rating.user === this.state.username) && (rating.song === songID)
+        //   ))
+        //   .then(rating => {
+        //     if (rating.length > 0) {
+        //       this.setState( {activeSong: {userRating: rating.num_rate}} )
+        //     } else {
+        //       this.setState( {activeSong: {userRating: "none"}})
+        //     }
+        //   })
+      })
+      .then(() => this.setState( {displayActiveSong: true }));
     }
 
   createSongDiv = (title, artist, songID) => {
@@ -103,12 +117,6 @@ class App extends React.Component {
       .then(() => this.refreshSongs())  
     }
 
-  onFormChange = (event) => {
-    let {name, value} = event.target;
-    const activeSong = { ...this.state.activeSong, [name]: value};
-    this.setState({activeSong: activeSong});
-  }
-
   onCreateFormChange = (event) => {
     let {name, value} = event.target;
     if (value === "1" || value === "2" || value === "3" || value === "4" || value === "5") {
@@ -141,15 +149,61 @@ class App extends React.Component {
       
   }
 
+  onFormChange = (event) => {
+    let {name, value} = event.target;
+    console.log(name);
+    console.log(value);
+    if (value === "1" || value === "2" || value === "3" || value === "4" || value === "5") {
+      value = parseInt(value);
+    };
+    if (value != "none") {
+      const activeSong = { ...this.state.activeSong, [name]: value};
+      this.setState({activeSong: activeSong});
+      console.log(this.state.activeSong);
+  }
+  }
+
   onFormSubmit = (event) => {
     const activeSong = this.state.activeSong;
     axios
       .put(`http://localhost:8000/api/songs/${activeSong.songID}/`, {title: activeSong.songTitle, artist: activeSong.artist})
-      .then(res => this.setState({displayActiveSong: false}))
-      .then(() => this.refreshSongs())
+      .then(res => {
+          axios 
+            .get(`http://localhost:8000/api/ratings/`)
+            .then(response => response.data.filter(
+              rating => (rating.song === activeSong.songID) && (rating.user === this.state.username)
+            ))
+            .then(rating => {
+              if (rating.length > 0) {
+                  axios 
+                  .put(`http://localhost:8000/api/ratings/${rating[0].id}/`, {num_rate: activeSong.userRating, user: this.state.username, song: activeSong.songID})
+                  .then(() => this.setState({displayActiveSong: false}))
+                  .then(() => this.refreshSongs())          
+              } else {
+                axios
+                  .post(`http://localhost:8000/api/ratings/`, {num_rate: activeSong.userRating, user: this.state.username, song: activeSong.songID})
+                  .then(() => this.setState({displayActiveSong: false}))
+                  .then(() => this.refreshSongs())               
+              }
+            })
+        }
+      )
+  }
+
+  editRatingSelect = () => {
+    return (
+      <select name="userRating" onChange={this.onFormChange}>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+      </select>
+    )
   }
 
   displaySongPlate = () => {
+    const userRating = this.state.activeSong.userRating;
     return(
       <div className="plateContainer">
           <div className="songInfo">
@@ -163,6 +217,7 @@ class App extends React.Component {
                 <form>
                   <input name="songTitle" value={this.state.activeSong.songTitle} onChange={this.onFormChange}></input>
                   <input name="artist" value={this.state.activeSong.artist} onChange={this.onFormChange}></input>
+                  {this.editRatingSelect()}
                 </form>
                 <button onClick={() => this.onFormSubmit()}>Save</button>
               </div>
