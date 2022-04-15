@@ -21,14 +21,16 @@ This is a problem we've occasionally encountered across different operating syst
     ```
 
 2. Run the React frontend 
-    open a new terminal window and cd into music_project/music_frontend directory and run
+    open a new terminal window, cd into music_project directory, and run
     ```shell
+    >>> source venv/bin/activate # activate virtual environment
+    >>> cd music_frontend
     >>> npm start
     ```
 
     in the event of compilation error, run 
     ```shell
-    >>> npm install
+    >>> npm install # install necessary dependencies. these should already be in the venv, but if not npm install should take care of it
     >>> npm start
     ```
     Your browser should automatically open the app. If not, check <http://localhost:3000/>.
