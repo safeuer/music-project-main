@@ -27,8 +27,7 @@ class App extends React.Component {
       logInProps: {userInput: "",
               passwordInput: ""},
       songList: [],
-      displayActiveSong: false,
-      username: "Amelia-Earhart"
+      displayActiveSong: false
     };
   }
 
@@ -61,13 +60,6 @@ class App extends React.Component {
     return (<div className="song-button">
       <button onClick={() => this.renderSong(songID, title, artist)}>{title} - {artist}</button>
     </div>)
-  }
-
-  handleDelete = (rating) => {
-    axios 
-      .delete("http://localhost:8000/api/ratings/{rating.id}")
-      .then(response => this.refreshSongs) // make one that refreshes the rating instead? of the open song?
-      .catch(error => console.log(error))
   }
 
   deleteRating = () => {
